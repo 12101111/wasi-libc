@@ -1,7 +1,11 @@
+#ifdef __wasilibc_unmodified_upstream
 #define SYSCALL_NO_TLS 1
 #include <elf.h>
+#endif
 #include <limits.h>
+#ifdef __wasilibc_unmodified_upstream
 #include <sys/mman.h>
+#endif
 #include <string.h>
 #include <stddef.h>
 #include "pthread_impl.h"
@@ -11,6 +15,7 @@
 
 volatile int __thread_list_lock;
 
+#ifdef __wasilibc_unmodified_upstream
 int __init_tp(void *p)
 {
 	pthread_t td = p;
@@ -35,6 +40,7 @@ static struct builtin_tls {
 #define MIN_TLS_ALIGN offsetof(struct builtin_tls, pt)
 
 static struct tls_module main_tls;
+#endif
 
 void *__copy_tls(unsigned char *mem)
 {
@@ -71,6 +77,7 @@ void *__copy_tls(unsigned char *mem)
 	return td;
 }
 
+#ifdef __wasilibc_unmodified_upstream
 #if ULONG_MAX == 0xffffffff
 typedef Elf32_Phdr Phdr;
 #else
@@ -151,3 +158,5 @@ static void static_init_tls(size_t *aux)
 }
 
 weak_alias(static_init_tls, __init_tls);
+
+#endif

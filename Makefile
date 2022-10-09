@@ -8,13 +8,14 @@ NM ?= $(patsubst %clang,%llvm-nm,$(filter-out ccache sccache,$(CC)))
 ifeq ($(origin AR), default)
 AR = $(patsubst %clang,%llvm-ar,$(filter-out ccache sccache,$(CC)))
 endif
-EXTRA_CFLAGS ?= -O2 -DNDEBUG
+EXTRA_CFLAGS ?= -O2 -g
+# -DNDEBUG
 # The directory where we build the sysroot.
 SYSROOT ?= $(CURDIR)/sysroot
 # A directory to install to for "make install".
 INSTALL_DIR ?= /usr/local
 # single or posix; note that pthread support is still a work-in-progress.
-THREAD_MODEL ?= single
+THREAD_MODEL ?= posix
 # dlmalloc or none
 MALLOC_IMPL ?= dlmalloc
 # yes or no
@@ -190,8 +191,14 @@ LIBC_TOP_HALF_MUSL_SOURCES = \
 ifeq ($(THREAD_MODEL), posix)
 LIBC_TOP_HALF_MUSL_SOURCES += \
     $(addprefix $(LIBC_TOP_HALF_MUSL_SRC_DIR)/, \
+        env/__init_tls.c \
+        stdio/__lockfile.c \
+        thread/__lock.c \
         thread/__wait.c \
         thread/__timedwait.c \
+        thread/default_attr.c \
+        thread/lock_ptc.c \
+        thread/pthread_attr_init.c \
         thread/pthread_cleanup_push.c \
         thread/pthread_cond_broadcast.c \
         thread/pthread_cond_destroy.c \
@@ -204,6 +211,7 @@ LIBC_TOP_HALF_MUSL_SOURCES += \
         thread/pthread_condattr_setclock.c \
         thread/pthread_condattr_setpshared.c \
         thread/pthread_create.c \
+        thread/pthread_join.c \
         thread/pthread_mutex_consistent.c \
         thread/pthread_mutex_destroy.c \
         thread/pthread_mutex_init.c \
@@ -230,7 +238,9 @@ LIBC_TOP_HALF_MUSL_SOURCES += \
         thread/pthread_rwlockattr_destroy.c \
         thread/pthread_rwlockattr_init.c \
         thread/pthread_rwlockattr_setpshared.c \
+        thread/pthread_setattr_default_np.c \
         thread/pthread_setcancelstate.c \
+        thread/pthread_self.c \
         thread/pthread_testcancel.c \
         thread/sem_destroy.c \
         thread/sem_getvalue.c \

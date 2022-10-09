@@ -58,7 +58,10 @@ void __tl_sync(pthread_t td)
 	if (tl_lock_waiters) __wake(&__thread_list_lock, 1, 0);
 }
 
-_Noreturn void __pthread_exit(void *result)
+#ifdef __wasilibc_unmodified_upstream
+_Noreturn
+#endif
+void __pthread_exit(void *result)
 {
 	pthread_t self = __pthread_self();
 	sigset_t set;
@@ -115,7 +118,7 @@ _Noreturn void __pthread_exit(void *result)
 #ifdef __wasilibc_unmodified_upstream
 		__restore_sigs(&set);
 #endif
-		exit(0);
+		//exit(0);
 	}
 
 	/* At this point we are committed to thread termination. */
@@ -189,7 +192,7 @@ _Noreturn void __pthread_exit(void *result)
 #ifdef __wasilibc_unmodified_upstream
 	for (;;) __syscall(SYS_exit, 0);
 #else
-	for (;;) exit(0);
+	//for (;;) exit(0);
 #endif
 }
 
@@ -258,9 +261,7 @@ int wasi_thread_start(int tid, void *p)
 	// without waiting.
 	atomic_store((atomic_int *) &(args->thread->tid), tid);
 	// Save the pointer to the pthread structure as the global `pthread_self`.
-	__asm__("local.set %0\n"
-		  "global.set __wasilibc_pthread_self\n"
-          : "=r"(args->thread));
+	__set_tp(args->thread);
 	// Execute the user's start function.
 	int (*start)(void*) = (int(*)(void*)) args->start_func;
 	__pthread_exit((void *)(uintptr_t)start(args->start_arg));
@@ -300,7 +301,9 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
 	pthread_attr_t attr = { 0 };
 	sigset_t set;
 
+#ifdef __wasilibc_unmodified_upstream
 	if (!libc.can_do_threads) return ENOSYS;
+#endif
 	self = __pthread_self();
 	if (!libc.threaded) {
 		for (FILE *f=*__ofl_lock(); f; f=f->next)

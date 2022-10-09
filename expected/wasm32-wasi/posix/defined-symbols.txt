@@ -23,6 +23,7 @@ __c_locale
 __clock
 __clock_gettime
 __clock_nanosleep
+__copy_tls
 __cos
 __cosdf
 __cosl
@@ -38,6 +39,8 @@ __ctype_tolower_loc
 __ctype_toupper_loc
 __cxa_atexit
 __cxa_finalize
+__default_guardsize
+__default_stacksize
 __des_setkey
 __do_cleanup_pop
 __do_cleanup_push
@@ -81,12 +84,14 @@ __fwritable
 __fwritex
 __fwriting
 __get_locale
+__get_tp
 __getdelim
 __getentropy
 __getopt_msg
 __gmtime_r
 __hwcap
 __inet_aton
+__inhibit_ptc
 __intscan
 __invtrigl_R
 __isalnum_l
@@ -143,6 +148,8 @@ __loc_is_allocated
 __locale_lock
 __locale_lockptr
 __localtime_r
+__lock
+__lockfile
 __log2_data
 __log2f_data
 __log_data
@@ -186,6 +193,7 @@ __progname_full
 __pthread_cond_timedwait
 __pthread_create
 __pthread_exit
+__pthread_join
 __pthread_mutex_lock
 __pthread_mutex_timedlock
 __pthread_mutex_trylock
@@ -217,6 +225,7 @@ __rsqrt_tab
 __secs_to_tm
 __secs_to_zone
 __seed48
+__set_tp
 __shgetc
 __shlim
 __signgam
@@ -263,6 +272,7 @@ __tan
 __tandf
 __tanl
 __testcancel
+__thread_list_lock
 __timedwait
 __timedwait_cp
 __tl_lock
@@ -285,6 +295,8 @@ __tre_mem_new_impl
 __tsearch_balance
 __uflow
 __unlist_locked_file
+__unlock
+__unlockfile
 __uselocale
 __utc
 __wait
@@ -950,6 +962,7 @@ program_invocation_name
 program_invocation_short_name
 pselect
 psignal
+pthread_attr_init
 pthread_cond_broadcast
 pthread_cond_destroy
 pthread_cond_init
@@ -962,6 +975,8 @@ pthread_condattr_setclock
 pthread_condattr_setpshared
 pthread_create
 pthread_exit
+pthread_getattr_default_np
+pthread_join
 pthread_mutex_consistent
 pthread_mutex_destroy
 pthread_mutex_getprioceiling
@@ -988,8 +1003,12 @@ pthread_rwlock_wrlock
 pthread_rwlockattr_destroy
 pthread_rwlockattr_init
 pthread_rwlockattr_setpshared
+pthread_self
+pthread_setattr_default_np
 pthread_setcancelstate
 pthread_testcancel
+pthread_timedjoin_np
+pthread_tryjoin_np
 putc
 putc_unlocked
 putchar
@@ -1176,6 +1195,7 @@ tfind
 tgamma
 tgammaf
 tgammal
+thrd_current
 thrd_sleep
 time
 timegm
